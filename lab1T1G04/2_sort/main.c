@@ -1,4 +1,4 @@
-#include <stdlib.h>
+/*#include <stdlib.h>
 #include <time.h>
 #include <omp.h>
 #include <stdio.h>
@@ -45,3 +45,4 @@ int main(int argc, char* argv[]) {
     
     return 0;
 }
+*/

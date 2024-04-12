@@ -1,4 +1,4 @@
-#include <time.h>
+/*#include <time.h>
 #include <stdlib.h>
 #include <omp.h>
 #include "sort.h"
@@ -26,4 +26,4 @@ void fill_array(int *array, int n) {
     for(i=0; i < n; i++) {
         array[i] = rand()%n;
     }
-}
+}*/

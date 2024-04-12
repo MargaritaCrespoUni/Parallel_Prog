@@ -1,4 +1,4 @@
-# include <stdlib.h>
+/*# include <stdlib.h>
 # include <stdio.h>
 
 # include <omp.h>
@@ -114,3 +114,4 @@ int prime_dynamic ( int n ) {
 	}
 	return total;
 }
+*/
