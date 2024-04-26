@@ -1,4 +1,4 @@
-/*# include <stdlib.h>
+# include <stdlib.h>
 # include <stdio.h>
 
 # include <omp.h>
@@ -62,18 +62,19 @@ int prime_default ( int n ) {
 	int prime;
 	int total = 0;
 
-	for ( i = 2; i <= n; i++ )
-	{
-		prime = 1;
+    #pragma omp parallel for private(i, j, prime) reduction(+:total)
+    for ( i = 2; i <= n; i++ )
+    {
+        prime = 1;
 
-		for ( j = 2; j < i; j++ ){
-			if ( i % j == 0 ){
-				prime = 0;
-				break;
-			}
-		}
-		total = total + prime;
-	}
+        for ( j = 2; j < i; j++ ){
+            if ( i % j == 0 ){
+                prime = 0;
+                break;
+            }
+        }
+        total = total + prime;
+    }
 	return total;
 }
 
@@ -83,16 +84,17 @@ int prime_static ( int n ) {
 	int prime;
 	int total = 0;
 
-	for ( i = 2; i <= n; i++ ){
-		prime = 1;
-		for ( j = 2; j < i; j++ ){
-			if ( i % j == 0 ) {
-				prime = 0;
-				break;
-			}
-		}
-		total = total + prime;
-	}
+    #pragma omp parallel for private(i, j, prime) reduction(+:total) schedule(static, 10)
+    for (i = 2; i <= n; i++) {
+        prime = 1;
+        for (j = 2; j < i; j++) {
+            if (i % j == 0) {
+                prime = 0;
+                break;
+            }
+        }
+        total = total + prime;
+    }
 	return total;
 }
 
@@ -102,16 +104,16 @@ int prime_dynamic ( int n ) {
 	int prime;
 	int total = 0;
 
-	for ( i = 2; i <= n; i++ ) {
-		prime = 1;
-		for ( j = 2; j < i; j++ ) {
-			if ( i % j == 0 ) {
-				prime = 0;
-				break;
-			}
-		}
-		total = total + prime;
-	}
+    #pragma omp parallel for private(i, j, prime) reduction(+:total) schedule(dynamic, 10)
+    for (i = 2; i <= n; i++) {
+        prime = 1;
+        for (j = 2; j < i; j++) {
+            if (i % j == 0) {
+                prime = 0;
+                break;
+            }
+        }
+        total = total + prime;
+    }
 	return total;
 }
-*/

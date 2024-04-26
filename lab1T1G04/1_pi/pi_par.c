@@ -1,31 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <omp.h>
 
 double compute_pi(int N) {
-    double sum = 0.0;
+    double pi = 0.0;
     double delta_x = 1.0 / N;
-    double x;
+
     double height;
+    double *sum = (double*)malloc(sizeof(double) * omp_get_max_threads());
+    int n_threads = omp_get_num_threads();
+
+
     #pragma omp parallel
     {
-        for (int i = 0; i < N; i++) {
+        double x;
+
+        int id = omp_get_thread_num();
+
+        int first = N/n_threads*id;
+        int last = N/n_threads*(id + 1);
+
+        if (last > N) last = N;
+        double foo = 0.0;
+        for (int i = first; i < last; i++) {
             x = (i + 0.5) / N;
             height = 4 / (1 + x * x);
-            sum += delta_x * height;
+            foo += delta_x * height;
         }
+        sum[id] = foo;
+
     }
-    return sum;
+
+    for (int i = 0; i < omp_get_max_threads(); i++) {
+        pi += sum[i];
+    }
+
+    free(sum);
+    return pi;
 }
 
 int main(int argc, char *argv[]) {
     int N = atoi(argv[1]);
-    clock_t start_time = clock();
+    double start_time = omp_get_wtime();
     double pi = compute_pi(N);
-    clock_t end_time = clock();
+    double end_time = omp_get_wtime();
 
-    double runtime = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    double runtime = end_time - start_time;
 
     printf("\nPi with %i steps is %.15lf in %lf seconds\n", N, pi, runtime);
 }

@@ -10,4 +10,4 @@ add_executable(lab1T1G04
         2_sort/main.c
         2_sort/sort.c
         2_sort/sort.h
-        3_primes/primes.c)
+        3_primes/primes.c 1_pi/pi_par.c 1_pi/pi_task.c)

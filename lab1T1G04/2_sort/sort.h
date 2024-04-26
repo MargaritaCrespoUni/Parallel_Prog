@@ -2,7 +2,7 @@
 #define SORT_H
 
 #ifndef _NUM_THREADS
-    #define _NUM_THREADS 2
+    #define _NUM_THREADS 1
 #endif
 
 int sort(int *array, int n);
