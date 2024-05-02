@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J mpi_comms
-#SBATCH --output=out_%j.out
-#SBATCH --error=out_%j.err
+#SBATCH --output=com_%j.out
+#SBATCH --error=com_%j.err
 #SBATCH -p ippd-cpu
 #SBATCH --time=00:02:00
 #SBATCH --nodes=1

@@ -27,6 +27,8 @@ int main(int argc, char** argv)
     /// FIRST TEST - SYNCHRONOUS COMMUNICATION
     test_synchronous(rank, size);
 
+    MPI_Barrier(MPI_COMM_WORLD); //added, do not know if it's okay
+
     /// FIRST TEST - ASYNCHRONOUS COMMUNICATION
     test_asynchronous(rank, size);
 
@@ -37,46 +39,54 @@ int main(int argc, char** argv)
 void test_synchronous(int rank, int size)
 {
     double start_time, run_time, average_time, max_time, min_time;
-    int sbuf[NUM_TEST];
-    int rbuf[NUM_TEST];
-    MPI_Status status;
+    int sbuf[NUM_TEST]; //array to send data
+    int rbuf[NUM_TEST]; //array to receive data
+    MPI_Status status; //interesting!! the other one doesn't have it
 
     /// TODO compute send/receive cores
-    int send_core = -1;
-    int recv_core = -1;
-    /// TODO
+    int send_core = (rank +1) % size;
+    int recv_core = (rank-1 + size) % size;
+
 
     start_time = MPI_Wtime();
-    for(int i = 0; i < NUM_TEST; i++) {
-        sbuf[i] = rank;
+    for(int i = 0; i < NUM_TEST; i++) { //iterate over specified number of tests sending data synchronimously for each process
+        sbuf[i] = rank; //data buffer from which data will be sent (we have to use it afterwards)
 
         /// TODO send
-        
-        /// TODO
+        //1 is the data items to be sent
+        //MPI_INT says we are sending integers
+        //MPI_COMM_WORLD represent all the processes in the MPI job
+        MPI_Send(&sbuf[i], 1 , MPI_INT, send_core, 0, MPI_COMM_WORLD );
+
 
         if (i % size == rank)
             usleep(WAITING_TIME);
 
         /// TODO recv
+        //same for the receive but we add the status as the sent has to be confirmed
+        MPI_Recv(&rbuf[i], 1 , MPI_INT, recv_core, 0, MPI_COMM_WORLD , &status);
 
-        /// TODO
 
         assert(rbuf[i] == recv_core);
     }
-    run_time = MPI_Wtime() - start_time;
+    run_time = MPI_Wtime() - start_time; //measure time taken for each iteration
+
 
     /// TODO compute average, max and min times
+    MPI_Allreduce(&run_time,&average_time,  1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&run_time,&min_time,  1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+    MPI_Allreduce(&run_time,&max_time,  1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
 
-    /// TODO compute average, max and min times
+    average_time= average_time/ size;
 
     if (rank == 0) {
-        printf("Asynchronous send/receive test with %d processes and %d repetitions.\n", size, NUM_TEST);
+        printf("Synchronous send/receive test with %d processes and %d repetitions.\n", size, NUM_TEST);
         printf("    average: %.2lf s\n", average_time);
         printf("    min:     %.2lf s\n", min_time);
         printf("    max:     %.2lf s\n", max_time);
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Barrier(MPI_COMM_WORLD); deleted here do not know if its correct
 
 }
 
@@ -85,31 +95,37 @@ void test_asynchronous(int rank, int size)
     double start_time, run_time, average_time, max_time, min_time;
     int sbuf[NUM_TEST];
     int rbuf[NUM_TEST];
+
+    MPI_Request send_request, recv_request;
+    MPI_Status send_status, recv_status;
+
     /// TODO compute send/receive cores
-    int recv_core = -1;
-    int send_core = -1;
-    /// TODO
+    int recv_core = (rank + 1) % size;
+    int send_core = (rank - 1 + size) % size;
+
 
     start_time = MPI_Wtime();
 
-    for(int i = 0; i < NUM_TEST; i++) {
+    for(int i = 0; i < NUM_TEST; i++) { //specified number of tests
         sbuf[i] = rank;
 
         /// TODO async send
+        MPI_Isend(&sbuf[i], 1, MPI_INT, send_core, 0, MPI_COMM_WORLD, &send_request);
 
-        /// TODO
 
         if (rank == i)
-            usleep(WAITING_TIME);
+            usleep(WAITING_TIME); //wait for all asynchronous sends and receives to complete
 
-        /// TODO async send
+        ///TODO async recv
+        MPI_Irecv(&rbuf[i], 1, MPI_INT, recv_core, 0, MPI_COMM_WORLD, &recv_request);
 
-        /// TODO
+
     }
 
 
-
     /// TODO wait for async send/receive
+    MPI_Wait(&send_request, &send_status);
+    MPI_Wait(&recv_request, &recv_status);
 
     /// TODO
 
@@ -120,6 +136,12 @@ void test_asynchronous(int rank, int size)
     }
 
     /// TODO compute average, max and min times
+
+    MPI_Allreduce(&run_time, &average_time, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&run_time, &min_time, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+    MPI_Allreduce(&run_time, &max_time, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+
+    average_time /= size;
 
     /// TODO
 
