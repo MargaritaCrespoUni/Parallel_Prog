@@ -96,8 +96,8 @@ void test_asynchronous(int rank, int size)
     int sbuf[NUM_TEST];
     int rbuf[NUM_TEST];
 
-    MPI_Request send_request, recv_request;
-    MPI_Status send_status, recv_status;
+    MPI_Request send_request[NUM_TEST], recv_request[NUM_TEST];
+    //MPI_Status send_status, recv_status;
 
     /// TODO compute send/receive cores
     int recv_core = (rank + 1) % size;
@@ -110,22 +110,22 @@ void test_asynchronous(int rank, int size)
         sbuf[i] = rank;
 
         /// TODO async send
-        MPI_Isend(&sbuf[i], 1, MPI_INT, send_core, 0, MPI_COMM_WORLD, &send_request);
+        MPI_Isend(&sbuf[i], 1, MPI_INT, send_core, 0, MPI_COMM_WORLD, &send_request[i]);
 
 
         if (rank == i)
             usleep(WAITING_TIME); //wait for all asynchronous sends and receives to complete
 
         ///TODO async recv
-        MPI_Irecv(&rbuf[i], 1, MPI_INT, recv_core, 0, MPI_COMM_WORLD, &recv_request);
+        MPI_Irecv(&rbuf[i], 1, MPI_INT, recv_core, 0, MPI_COMM_WORLD, &recv_request[i]);
 
 
     }
 
 
     /// TODO wait for async send/receive
-    MPI_Wait(&send_request, &send_status);
-    MPI_Wait(&recv_request, &recv_status);
+    MPI_Waitall(NUM_TEST, send_request, MPI_STATUSES_IGNORE);
+    MPI_Waitall(NUM_TEST, recv_request, MPI_STATUSES_IGNORE);
 
     /// TODO
 
