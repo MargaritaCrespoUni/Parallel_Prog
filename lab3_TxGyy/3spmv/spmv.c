@@ -20,10 +20,13 @@ void spmv_gpu(int m, int r, double* vals, int* cols, double* x, double* y)
 {
     #pragma acc parallel loop present(vals[0:m*r], cols[0:m*r], x[0:m], y[0:m]) 
     for(int i = 0; i < m; i++){
+        double temp_y = 0.0;
+        #pragma acc loop seq reduction(+:temp_y)
         for(int j = 0; j < r; j++){
             int index = (i*r) + j;
-            y[i] += vals[index]*x[cols[index]]; 
+            temp_y += vals[index]*x[cols[index]]; 
         }
+        y[i] = temp_y;
     }
 }
 
@@ -107,12 +110,15 @@ int main()
     time_end = omp_get_wtime();
     time_cpu = time_end - time_start;
 
-    time_start = omp_get_wtime();
+    #pragma acc data copyin(Avals[0:vec_size*ROWSIZE], Acols[0:vec_size*ROWSIZE], x[0:vec_size], y_gpu[0:vec_size]) copyout(y_gpu[0:vec_size])
+    {
+        time_start = omp_get_wtime();
+        
+        for(int i = 0; i < 100; i++) 
+            spmv_gpu(vec_size, ROWSIZE, Avals, Acols, x, y_gpu);
 
-    for(int i = 0; i < 100; i++)
-        spmv_gpu(vec_size, ROWSIZE, Avals, Acols, x, y_gpu);
-
-    time_end = omp_get_wtime();
+        time_end = omp_get_wtime();
+    }
     time_gpu = time_end - time_start;
 
 
