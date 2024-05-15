@@ -8,12 +8,23 @@
 
 void spmv_cpu(int m, int r, double* vals, int* cols, double* x, double* y)
 {
-
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < r; j++) {
+            int index = (i*r) + j;
+            y[i] += vals[index]*x[cols[index]]; 
+        }
+    }
 }
 
 void spmv_gpu(int m, int r, double* vals, int* cols, double* x, double* y)
 {
-
+    #pragma acc parallel loop present(vals[0:m*r], cols[0:m*r], x[0:m], y[0:m]) 
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < r; j++){
+            int index = (i*r) + j;
+            y[i] += vals[index]*x[cols[index]]; 
+        }
+    }
 }
 
 
@@ -95,7 +106,6 @@ int main()
 
     time_end = omp_get_wtime();
     time_cpu = time_end - time_start;
-
 
     time_start = omp_get_wtime();
 
