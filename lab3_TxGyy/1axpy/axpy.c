@@ -3,16 +3,20 @@
 #include<math.h>
 #include<omp.h>
 
-void axpy_cpu(int n, double alpha, double* x, double* y)
+void axpy_cpu(int n, double alpha, double* x, double* y) ///sequential
 {
-    
+    for (int i=0; i<n; i++){
+        y[i] = (alpha * x[i]) + y[i];
+    }
 
 }
 
-void axpy_gpu(int n, double alpha, double* x, double* y)
+void axpy_gpu(int n, double alpha, double* x, double* y) ///parallel
 {
-    
-
+    #pragma acc parallel loop present(x[0:n],y[0:n])
+    for (int i=0; i<n; i++){
+        y[i] = (alpha * x[i]) + y[i];
+    }
 }
 
 
@@ -45,7 +49,7 @@ int main(int argc, char **argv)
     time_end = omp_get_wtime();
     time_cpu = time_end - time_start;
 
-
+    #pragma acc enter data copyin(x[0:vec_size],y_gpu[0:vec_size])
     time_start = omp_get_wtime();
 
     for(int i = 0; i < 100; i++)
@@ -53,7 +57,7 @@ int main(int argc, char **argv)
 
     time_end = omp_get_wtime();
     time_gpu = time_end - time_start;
-
+    #pragma acc exit data copyout(y_gpu[0:vec_size])
 
 
     // compare gpu and cpu results
@@ -66,7 +70,7 @@ int main(int argc, char **argv)
     printf("axpy comparison cpu vs gpu error: %e, size %d\n",
            norm2, vec_size);
 
-    double speed_up = 1; // TODO
+    double speed_up = time_cpu/time_gpu; // TODO
     printf("CPU Time: %lf - GPU Time: %lf - speed-up = %lf\n", time_cpu, time_gpu, speed_up);
 
     // free allocated memory
