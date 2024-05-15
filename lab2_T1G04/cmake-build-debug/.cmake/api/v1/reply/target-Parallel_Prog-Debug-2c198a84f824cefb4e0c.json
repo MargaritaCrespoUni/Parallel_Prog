@@ -2,7 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Parallel_Prog"
+			"path" : "Parallel_Prog.exe"
+		},
+		{
+			"path" : "Parallel_Prog.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -35,7 +38,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -fcolor-diagnostics"
+					"fragment" : "-g -fdiagnostics-color=always"
 				},
 				{
 					"fragment" : "-std=gnu11"
@@ -72,12 +75,16 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
 			}
 		],
 		"language" : "C"
 	},
 	"name" : "Parallel_Prog",
-	"nameOnDisk" : "Parallel_Prog",
+	"nameOnDisk" : "Parallel_Prog.exe",
 	"paths" : 
 	{
 		"build" : ".",

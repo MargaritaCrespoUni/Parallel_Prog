@@ -1,4 +1,10 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/margaritacrespo/uni/3rd_Trim/Prog/Parallel_Prog/lab2_T1G04 -B /Users/margaritacrespo/uni/3rd_Trim/Prog/Parallel_Prog/lab2_T1G04/cmake-build-debug
+"C:\Program Files\JetBrains\CLion 2022.3.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\expos\Desktop\Parallel_Prog\lab2_T1G04 -B C:\Users\expos\Desktop\Parallel_Prog\lab2_T1G04\cmake-build-debug
+-- The C compiler identification is GNU 11.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/margaritacrespo/uni/3rd_Trim/Prog/Parallel_Prog/lab2_T1G04/cmake-build-debug
+-- Build files have been written to: C:/Users/expos/Desktop/Parallel_Prog/lab2_T1G04/cmake-build-debug

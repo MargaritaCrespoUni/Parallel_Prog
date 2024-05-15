@@ -1,3 +1,3 @@
-/Users/margaritacrespo/uni/3rd_Trim/Prog/Parallel_Prog/lab2_T1G04/cmake-build-debug/CMakeFiles/Parallel_Prog.dir
-/Users/margaritacrespo/uni/3rd_Trim/Prog/Parallel_Prog/lab2_T1G04/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/margaritacrespo/uni/3rd_Trim/Prog/Parallel_Prog/lab2_T1G04/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/expos/Desktop/Parallel_Prog/lab2_T1G04/cmake-build-debug/CMakeFiles/Parallel_Prog.dir
+C:/Users/expos/Desktop/Parallel_Prog/lab2_T1G04/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/expos/Desktop/Parallel_Prog/lab2_T1G04/cmake-build-debug/CMakeFiles/rebuild_cache.dir
