@@ -11,4 +11,4 @@
 module load NVHPC
 
 make || exit 1
-./axpy.x 1000000
+./axpy.x 100
