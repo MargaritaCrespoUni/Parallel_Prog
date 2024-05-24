@@ -40,7 +40,7 @@ int main(int argc, char **argv)
         x[i] = sin(i*0.01);
         y[i] = cos(i*0.01);
     }
-
+    //hello guapetona
 
     time_start = omp_get_wtime();
 
