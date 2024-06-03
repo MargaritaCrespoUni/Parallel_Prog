@@ -8,14 +8,30 @@
 
 void spmv_cpu(int m, int r, double* vals, int* cols, double* x, double* y)
 {
+    for(int i = 0; i < m; i++) {
+        y[i] = 0; //added so it works
+        for(int j = 0; j < r; j++) {
+            int index = (i*r) + j;
+            y[i] += vals[index]*x[cols[index]];
+        }
+    }
 }
 
 void axpy_cpu(int n, double alpha, double* x, double* y)
 {
+    for (int i=0; i<n; i++){
+        y[i] += alpha * x[i];
+
+    }
 }
 
 double dot_product_cpu(int n, double* x, double* y)
 {
+    double sum = 0.0;
+    for (int i = 0; i < n; i++) {
+        sum += x[i] * y[i];
+    }
+    return sum;
 }
 
 
