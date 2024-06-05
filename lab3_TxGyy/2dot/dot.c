@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     time_end = omp_get_wtime();
     time_cpu = time_end - time_start;
 
-    #pragma acc enter data copyin(x[0:vec_size], y[0:vec_size] )
+    #pragma acc enter data copyin(x[0:vec_size], y[0:vec_size])
 
     time_start = omp_get_wtime();
 
